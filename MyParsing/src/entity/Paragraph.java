@@ -1,39 +1,56 @@
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Tatyana on 11/4/14.
  */
 public class Paragraph extends Text {
-    Text text = new Paragraph();
 
-    public static String read(String fileName) throws FileNotFoundException {
-        //Этот спец. объект для построения строки
+    public Paragraph() {
+    }
+
+    public static void readFile(String fileName) throws FileNotFoundException{
+
         StringBuilder sb = new StringBuilder();
 
-        exists(fileName);
+        File file = new File(fileName);
+        List sentenceList = new ArrayList();
 
-        try {
-            //Объект для чтения файла в буфер
-            BufferedReader in = new BufferedReader(new FileReader( file.getAbsoluteFile()));
+
+        if (file.exists() && file.isFile()) {
             try {
-                //В цикле построчно считываем файл
-                String s;
-                while ((s = in.readLine()) != null) {
-                    sb.append(s);
-                    sb.append("\n");
+                BufferedReader reader = new BufferedReader(new FileReader(fileName));                                       //object for reading from file
+                try {
+                    String s;
+                    while ((s = reader.readLine()) != null) {                                                               //cycle of reading the sentence
+                        for (int count = 0; count < s.length(); count++)
+                        {
+                            if (s.charAt(count) != "\n")
+                            sb.append(s.charAt(count));
+
+
+                           sentenceList.add(s);
+
+                        }
+
+
+                    }
+                } finally {
+                    reader.close();                                                                                         //close file
                 }
-            } finally {
-                //Также не забываем закрыть файл
-                in.close();
+            } catch(IOException e) {
+                System.out.println("Error");
             }
-        } catch(IOException e) {
-            throw new RuntimeException(e);
+
+            System.out.println(sentenceList.get(0));
         }
 
-        //Возвращаем полученный текст с файла
-        return sb.toString();
+
     }
 }
